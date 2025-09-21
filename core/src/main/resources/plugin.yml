@@ -1,0 +1,10 @@
+name: ekEep
+version: '1.0'
+main: fr.molzonas.mcfr.ekeep.core.Ekeep
+api-version: '1.20'
+description: Large scale extensible team system.
+prefix: EkEep
+author: Molzonas
+website: https://github.com/Molzonas/EkEep
+contributors: [PaperMC]
+load: POSTWORLD
