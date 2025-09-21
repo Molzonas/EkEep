@@ -1,0 +1,35 @@
+#-------------------------------------------------------------------------------#
+#            Discover all capabilities of Qodana in our documentation           #
+#             https://www.jetbrains.com/help/qodana/about-qodana.html           #
+#-------------------------------------------------------------------------------#
+
+name: Qodana
+on:
+  pull_request:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write   # pour publier SARIF
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: 'Qodana Scan'
+        uses: JetBrains/qodana-action@v2025.2
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          use-caches: true
+          post-pr-comment: true
+          use-annotations: true
+      - name: Upload SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./qodana.sarif.json

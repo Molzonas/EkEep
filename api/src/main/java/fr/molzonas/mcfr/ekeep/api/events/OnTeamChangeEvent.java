@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 /**
- * After a player team is been changed, this event is called.
+ * Before a player team is been changed, this event is called.
  */
-public class OnTeamChangedEvent extends Event implements Cancellable {
+public class OnTeamChangeEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
     private final UUID playerUuid;
     private final String oldTeamId;
@@ -19,7 +19,7 @@ public class OnTeamChangedEvent extends Event implements Cancellable {
     private final String infos;
     private boolean cancelled;
 
-    public OnTeamChangedEvent(UUID playerUuid, String oldTeamId, String newTeamId, String reason, String infos) {
+    public OnTeamChangeEvent(UUID playerUuid, String oldTeamId, String newTeamId, String reason, String infos) {
         this.playerUuid = playerUuid;
         this.oldTeamId = oldTeamId;
         this.newTeamId = newTeamId;
