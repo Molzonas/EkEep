@@ -1,0 +1,21 @@
+#-------------------------------------------------------------------------------#
+#               Qodana analysis is configured by qodana.yaml file               #
+#             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
+#-------------------------------------------------------------------------------#
+version: "1.0"
+linter: jetbrains/qodana-jvm-community:2025.2
+profile:
+  name: qodana.recommended
+include:
+  - name: Java | Probable bugs
+  - name: Java | Nullability problems
+  - name: Java | Data flow issues
+exclude:
+  - name: All
+    paths:
+      - "plugin/target/**"
+      - "api/target/**"
+      - "**/generated/**"
+      - "**/build/**"
+projectJDK: "21"
+failThreshold: "0"

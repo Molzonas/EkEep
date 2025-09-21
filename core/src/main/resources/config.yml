@@ -1,0 +1,9 @@
+debug: false
+enable-update-check: true
+database:
+  type: postgres
+  url: jdbc:postgresql://localhost:5432/database
+  user: user
+  password: password
+cache:
+  profiles-ttl-seconds: 60
