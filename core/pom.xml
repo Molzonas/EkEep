@@ -18,6 +18,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>Lumine Public</name>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>fr.molzonas.mcfr</groupId>
@@ -116,6 +124,21 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- ModelEngine Integration -->
+        <dependency>
+            <groupId>com.ticxo.modelengine</groupId>
+            <artifactId>ModelEngine</artifactId>
+            <version>${modelengine.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
+            <version>${mythicmobs.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Mockbukkit tests -->
         <dependency>
             <groupId>com.github.seeseemelk</groupId>
@@ -176,40 +199,46 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <!-- IMPORTANT : ne jamais relocaliser vos packages API ni org.bukkit/io.papermc.paper -->
                             <relocations>
                                 <relocation>
                                     <pattern>com.github.benmanes.caffeine</pattern>
-                                    <shadedPattern>com.example.ek.libs.caffeine</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.caffeine</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>com.example.ek.libs.hikari</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.hikari</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.jdbi</pattern>
-                                    <shadedPattern>com.example.ek.libs.jdbi</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.jdbi</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.flywaydb</pattern>
-                                    <shadedPattern>com.example.ek.libs.flyway</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.flyway</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>io.lettuce.core</pattern>
-                                    <shadedPattern>com.example.ek.libs.lettuce</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.lettuce</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>it.unimi.dsi.fastutil</pattern>
-                                    <shadedPattern>com.example.ek.libs.fastutil</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.fastutil</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.fasterxml.jackson</pattern>
-                                    <shadedPattern>com.example.ek.libs.jackson</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.jackson</shadedPattern>
                                 </relocation>
-                                <!-- bStats : pas obligatoire de relocaliser, mais possible -->
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>com.example.ek.libs.bstats</shadedPattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.bstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.ticxo.modelengine</pattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.modelengine</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.lumine</pattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.mythicmobs</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
