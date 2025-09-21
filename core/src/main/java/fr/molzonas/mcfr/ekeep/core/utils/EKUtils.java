@@ -6,6 +6,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class EKUtils {
     private static Ekeep plugin;
+    private static final MiniMessage mm = MiniMessage.miniMessage();
     public static final String LOG_PREFIX = "[EkEep] ";
 
     private EKUtils() {}
@@ -19,10 +20,10 @@ public class EKUtils {
 
     /* Component <-> String */
     public static Component toComponent(String text) {
-        return MiniMessage.miniMessage().deserialize(text);
+        return mm.deserialize(text);
     }
     public static String toString(Component component) {
-        return MiniMessage.miniMessage().serialize(component);
+        return mm.serialize(component);
     }
 
     /* Logging */
