@@ -20,12 +20,31 @@
 
         <!--                Versions properties                -->
         <paper.api.version>1.20.6-R0.1-SNAPSHOT</paper.api.version>
+        <minimessage.version>4.16.0</minimessage.version> <!-- compile-only (Paper la fournit au runtime) -->
+        <cloud.version>1.8.4</cloud.version>
+        <configurate.version>4.2.0</configurate.version>
+        <caffeine.version>3.1.8</caffeine.version>
+        <hikari.version>5.1.0</hikari.version>
+        <jdbi.version>3.45.1</jdbi.version>
+        <flyway.version>10.17.0</flyway.version>
+        <lettuce.version>6.3.2.RELEASE</lettuce.version>
+        <fastutil.version>8.5.12</fastutil.version>
+        <jackson.version>2.17.2</jackson.version>
+        <bstats.version>3.0.2</bstats.version>
+        <mockbukkit.version>3.93.2</mockbukkit.version>
+        <luckperms.api.version>5.4</luckperms.api.version>
+        <protocollib.version>5.4.0</protocollib.version>
+        <!--                                                    -->
     </properties>
 
     <repositories>
         <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -36,6 +55,29 @@
                 <artifactId>paper-api</artifactId>
                 <version>${paper.api.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- Force Checker Framework version to 3.42.0 -->
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>3.42.0</version>
+            </dependency>
+
+            <!-- Force Jackson version to 2.17.2 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.17.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Force jackson-dataformat-toml used by Flyway (2.17.2) -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-toml</artifactId>
+                <version>2.17.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -54,7 +96,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[17,)</version>
+                                    <version>[21,)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>[3.8,)</version>
@@ -64,6 +106,18 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- Shading -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
+            <!-- Tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.0</version>
             </plugin>
         </plugins>
     </build>
