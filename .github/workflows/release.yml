@@ -2,14 +2,14 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: [ 'v*' ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+  build-and-release:
+    runs-on: [ self-hosted, linux ]
+    permissions: { contents: write }
+    env:
+      JAR_GLOB: core/target/*.jar
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0, fetch-tags: true }
@@ -28,40 +28,26 @@ jobs:
           set -e
           CUR="${GITHUB_REF_NAME}"
           PREV="$(git tag --sort=-creatordate | grep -E '^v' | sed -n '2p')"
-          if [ -z "$PREV" ]; then
-            PREV="$(git rev-list --max-parents=0 HEAD | head -n1)"
-          fi
-          echo "current=$CUR" >> $GITHUB_OUTPUT
-          echo "previous=$PREV" >> $GITHUB_OUTPUT
+          if [ -z "$PREV" ]; then PREV="$(git rev-list --max-parents=0 HEAD | head -n1)"; fi
+          echo "current=$CUR"  >> "$GITHUB_OUTPUT"
+          echo "previous=$PREV" >> "$GITHUB_OUTPUT"
 
       - name: Generate changelog
-        id: ch
         run: |
           set -e
-          PREV="${{ steps.tags.outputs.previous }}"
-          CUR="${{ steps.tags.outputs.current }}"
-          {
-            echo "## Changes"
-            echo
-            git log --no-merges --pretty=format:'- %h %s (%an)' "$PREV..$CUR"
-            echo
-          } > RELEASE_NOTES.md
+          git log --no-merges --pretty=format:'- %h %s (%an)' \
+            "${{ steps.tags.outputs.previous }}..${{ steps.tags.outputs.current }}" \
+            > RELEASE_NOTES.md
+          sed -i '1i ## Changes\n' RELEASE_NOTES.md
           cat RELEASE_NOTES.md
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: plugin-jar
-          path: core/target/*.jar
-          if-no-files-found: error
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tags.outputs.current }}
-          name: ${{ steps.tags.outputs.current }}
+          tag_name:  ${{ steps.tags.outputs.current }}
+          name:      ${{ steps.tags.outputs.current }}
           body_path: RELEASE_NOTES.md
           files: |
-            core/target/*.jar
+            ${{ env.JAR_GLOB }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
