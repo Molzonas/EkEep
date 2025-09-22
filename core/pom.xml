@@ -18,14 +18,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>nexus</id>
-            <name>Lumine Public</name>
-            <url>https://mvn.lumine.io/repository/maven-public/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>fr.molzonas.mcfr</groupId>
@@ -39,12 +31,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Adventure API (provided) -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>${adventure.version}</version>
+        </dependency>
+
         <!-- Adventure MiniMessage (for compilation) -->
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
             <version>${minimessage.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- High performances local caching -->
@@ -85,13 +83,6 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>${flyway.version}</version>
-        </dependency>
-
-        <!-- Redis -->
-        <dependency>
-            <groupId>io.lettuce</groupId>
-            <artifactId>lettuce-core</artifactId>
-            <version>${lettuce.version}</version>
         </dependency>
 
         <!-- JSON (Jackson) -->
@@ -188,6 +179,7 @@
                         <phase>package</phase>
                         <goals><goal>shade</goal></goals>
                         <configuration>
+                            <minimizeJar>true</minimizeJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <filters>
                                 <filter>
@@ -233,12 +225,8 @@
                                     <shadedPattern>fr.molzonas.mcfr.ekeep.libs.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.ticxo.modelengine</pattern>
-                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.modelengine</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>io.lumine</pattern>
-                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.mythicmobs</shadedPattern>
+                                    <pattern>net.kyori.adventure.text.minimessage</pattern>
+                                    <shadedPattern>fr.molzonas.mcfr.ekeep.libs.minimessage</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
