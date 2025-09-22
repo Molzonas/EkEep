@@ -7,7 +7,7 @@
     <parent>
         <groupId>fr.molzonas.mcfr</groupId>
         <artifactId>ekeep</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -22,7 +22,6 @@
         <dependency>
             <groupId>fr.molzonas.mcfr</groupId>
             <artifactId>ekeep-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -123,11 +122,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- MythicMobs Integration -->
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
             <version>${mythicmobs.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>co.aikar</groupId>
+            <artifactId>acf-paper</artifactId>
+            <version>${acf.version}</version>
         </dependency>
 
         <!-- Mockbukkit tests -->
@@ -152,6 +158,20 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
