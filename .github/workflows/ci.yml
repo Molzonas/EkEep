@@ -48,15 +48,17 @@ jobs:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
       - name: Configure Maven settings for GitHub Packages
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p ~/.m2
           cat > ~/.m2/settings.xml <<EOF
           <settings>
             <servers>
               <server>
                 <id>github</id>
-                <username>${env.GH_ACTOR}</username>
-                <password>${env.GH_TOKEN}</password>
+                <username>${GH_ACTOR}</username>
+                <password>${GH_TOKEN}</password>
               </server>
             </servers>
           </settings>
