@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>ekeep-api</artifactId>
+    <description>Easy-to-use API for EkEep</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

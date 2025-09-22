@@ -12,6 +12,7 @@
     </parent>
 
     <artifactId>ekeep-core</artifactId>
+    <description>Large scale extensible team system for PaperMC >=1.20.6</description>
 
     <properties>
         <java.version>21</java.version>

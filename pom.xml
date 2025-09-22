@@ -8,6 +8,7 @@
     <artifactId>ekeep</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
+    <description>Aggregator POM – not intended for external use</description>
     <modules>
         <module>api</module>
         <module>core</module>
