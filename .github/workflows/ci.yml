@@ -22,16 +22,21 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      - name: Build & Test
+        run: mvn -B verify
+
+  deploy-snapshot:
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: maven:3.9.9-eclipse-temurin-21
+    steps:
+      - uses: actions/checkout@v4
       - name: Setup Maven settings.xml
         run: |
           mkdir -p $HOME/.m2
           cat > $HOME/.m2/settings.xml << 'EOF'
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                                        https://maven.apache.org/xsd/settings-1.0.0.xsd">
+          <settings>
             <servers>
               <server>
                 <id>github</id>
@@ -41,9 +46,8 @@ jobs:
             </servers>
           </settings>
           EOF
-      - name: Build and Deploy SNAPSHOT
+      - name: Deploy API SNAPSHOT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
-        run: |
-          mvn -B -DskipTests -s "$HOME/.m2/settings.xml" deploy
+        run: mvn -B -DskipTests -s "$HOME/.m2/settings.xml" -pl api -am deploy
