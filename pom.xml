@@ -20,14 +20,14 @@
 
         <!--                Versions properties                -->
         <paper.api.version>1.20.6-R0.1-SNAPSHOT</paper.api.version>
-        <minimessage.version>4.16.0</minimessage.version> <!-- compile-only (Paper la fournit au runtime) -->
+        <adventure.version>4.17.0</adventure.version>
+        <minimessage.version>4.17.0</minimessage.version>
         <cloud.version>1.8.4</cloud.version>
         <configurate.version>4.2.0</configurate.version>
         <caffeine.version>3.1.8</caffeine.version>
         <hikari.version>5.1.0</hikari.version>
         <jdbi.version>3.45.1</jdbi.version>
         <flyway.version>10.17.0</flyway.version>
-        <lettuce.version>6.3.2.RELEASE</lettuce.version>
         <fastutil.version>8.5.12</fastutil.version>
         <jackson.version>2.17.2</jackson.version>
         <bstats.version>3.0.2</bstats.version>
@@ -47,6 +47,10 @@
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>nexus</id>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
     </repositories>
 
