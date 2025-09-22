@@ -36,35 +36,23 @@ jobs:
           path: ${{ env.JAR_GLOB }}
           if-no-files-found: error
   deploy-snapshot:
-    if: github.ref_type == 'branch' && startsWith(github.ref, 'refs/heads/')
+    if: github.event_name == 'push' && github.repository_owner == 'Molzonas'
     needs: build
     runs-on: ubuntu-latest
     container:
       image: maven:3.9.9-eclipse-temurin-21
     permissions:
-      contents: read
       packages: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
-      - name: Configure Maven settings for GitHub Packages
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<EOF
-          <settings>
-            <servers>
-              <server>
-                <id>github</id>
-                <username>${GH_ACTOR}</username>
-                <password>${GH_TOKEN}</password>
-              </server>
-            </servers>
-          </settings>
-          EOF
+      - name: Deploy API snapshot to GitHub Packages
         env:
           GH_ACTOR: ${{ github.actor }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy API snapshot to GitHub Packages
-        run: mvn -B -DskipTests -pl api -am deploy
+        run: |
+          mvn -B -DskipTests -pl api -am \
+            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/Molzonas/EkEep \
+            -Dusername="$GH_ACTOR" -Dpassword="$GH_TOKEN" \
+            deploy
