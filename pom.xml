@@ -95,6 +95,21 @@
         </dependencies>
     </dependencyManagement>
 
+    <distributionManagement>
+        <!-- Releases -->
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/Molzonas/EkEep</url>
+        </repository>
+        <!-- Snapshots -->
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages (Snapshots)</name>
+            <url>https://maven.pkg.github.com/Molzonas/EkEep</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
