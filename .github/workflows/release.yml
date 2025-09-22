@@ -1,4 +1,4 @@
-name: Release
+name: Release (Dockerized Maven)
 
 on:
   push:
@@ -9,12 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: maven:3.9.9-eclipse-temurin-21
-      options: --user root
     permissions:
-      contents: write
+      contents: write    # créer la Release GitHub
+      packages: write    # publier sur GitHub Packages
     env:
       MAVEN_OPTS: "-Dstyle.color=always"
-      JAR_GLOB: core/target/*.jar
+      JAR_CORE: core/target/*.jar
+      JAR_API: api/target/*.jar
+      GH_ACTOR: ${{ github.actor }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0, fetch-tags: true }
@@ -30,60 +33,57 @@ jobs:
       - name: Build (release)
         run: mvn -B -DskipITs package
 
+      - name: Configure Maven settings for GitHub Packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.m2"
+          cat > "$HOME/.m2/settings.xml" <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${GH_ACTOR}</username>
+                <password>${GH_TOKEN}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Deploy API release to GitHub Packages
+        run: |
+          mvn -B -DskipTests -pl api -am \
+            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/Molzonas/EkEep \
+            deploy
+
       - name: Compute previous tag
         id: prev
+        shell: bash
         run: |
           set -e
           CUR="${GITHUB_REF_NAME}"
           PREV="$(git tag --sort=-creatordate | grep -E '^v' | sed -n '2p' || true)"
           if [ -z "$PREV" ]; then PREV="$(git rev-list --max-parents=0 HEAD | head -n1)"; fi
-          echo "current=$CUR"  >> "$GITHUB_OUTPUT"
-          echo "previous=$PREV" >> "$GITHUB_OUTPUT"
+          echo "prev=$PREV" >> "$GITHUB_OUTPUT"
+          echo "cur=$CUR"   >> "$GITHUB_OUTPUT"
 
       - name: Generate changelog
+        shell: bash
         run: |
           set -e
           git log --no-merges --pretty=format:'- %h %s (%an)' \
-            "${{ steps.prev.outputs.previous }}..${{ steps.prev.outputs.current }}" \
+            "${{ steps.prev.outputs.prev }}..${{ steps.prev.outputs.cur }}" \
             > RELEASE_NOTES.md
           sed -i '1i ## Changes\n' RELEASE_NOTES.md
-          sed -i '1i # ${{ steps.prev.outputs.current }}\n' RELEASE_NOTES.md
-          cat RELEASE_NOTES.md
+          sed -i "1i # ${{ steps.prev.outputs.cur }}\n" RELEASE_NOTES.md
+          tail -n +1 RELEASE_NOTES.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.prev.outputs.current }}
-          name: ${{ steps.prev.outputs.current }}
+          tag_name: ${{ steps.prev.outputs.cur }}
+          name: ${{ steps.prev.outputs.cur }}
           body_path: RELEASE_NOTES.md
           files: |
-            ${{ env.JAR_GLOB }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Configure Maven settings for GitHub Packages
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<'EOF'
-          <settings>
-            <servers>
-              <server>
-                <id>github</id>
-                <username>${env.GH_ACTOR}</username>
-                <password>${env.GH_TOKEN}</password>
-              </server>
-            </servers>
-          </settings>
-          EOF
-        env:
-          GH_ACTOR: ${{ github.actor }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy API release to GitHub Packages
-        run: mvn -B -DskipTests -pl api -am deploy
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dist/core/*.jar
-            dist/api/*.jar
+            ${{ env.JAR_CORE }}
+            ${{ env.JAR_API }}
