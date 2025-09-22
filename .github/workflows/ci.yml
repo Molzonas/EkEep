@@ -1,86 +1,49 @@
-name: CI (Dockerized Maven)
+name: CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ["master"]
   pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
       image: maven:3.9.9-eclipse-temurin-21
-    permissions:
-      contents: read
-    env:
-      JAR_GLOB: core/target/*.jar
-      MAVEN_OPTS: "-Dstyle.color=always"
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-
       - name: Cache Maven repository
         uses: actions/cache@v4
         with:
           path: ~/.m2/repository
-          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            maven-${{ runner.os }}-
-
-      - name: Build & Test
-        run: mvn -B -DskipITs verify
-
-      - name: Upload plugin jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: plugin-jar
-          path: ${{ env.JAR_GLOB }}
-          if-no-files-found: error
-
-  deploy-snapshot:
-    if: github.event_name == 'push' && github.repository_owner == 'Molzonas'
-    needs: build
-    runs-on: ubuntu-latest
-    container:
-      image: maven:3.9.9-eclipse-temurin-21
-    permissions:
-      packages: write
-      contents: read
-    env:
-      GH_ACTOR: ${{ github.actor }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      MAVEN_OPTS: "-Dstyle.color=always"
-    steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-
-      - name: Cache Maven repository
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            maven-${{ runner.os }}-
-
-      - name: Configure Maven settings for GitHub Packages
-        shell: bash
+            ${{ runner.os }}-maven-
+      - name: Setup Maven settings.xml
         run: |
-          set -euo pipefail
-          mkdir -p "$HOME/.m2"
-          cat > "$HOME/.m2/settings.xml" <<EOF
-          <settings>
+          mkdir -p $HOME/.m2
+          cat > $HOME/.m2/settings.xml << 'EOF'
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                                        https://maven.apache.org/xsd/settings-1.0.0.xsd">
             <servers>
               <server>
                 <id>github</id>
-                <username>${GH_ACTOR}</username>
-                <password>${GH_TOKEN}</password>
+                <username>${env.GITHUB_ACTOR}</username>
+                <password>${env.GITHUB_TOKEN}</password>
               </server>
             </servers>
           </settings>
           EOF
-
-      - name: Deploy API SNAPSHOT to GitHub Packages
+      - name: Build and Deploy SNAPSHOT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
         run: |
-          mvn -B -DskipTests -pl api -am \
-            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/Molzonas/EkEep \
-            deploy
+          mvn -B -DskipTests -s "$HOME/.m2/settings.xml" deploy

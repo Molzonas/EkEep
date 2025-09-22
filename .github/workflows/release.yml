@@ -1,89 +1,40 @@
-name: Release (Dockerized Maven)
+name: Release
 
 on:
   push:
     tags: [ 'v*' ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  build-and-release:
+  release:
     runs-on: ubuntu-latest
     container:
       image: maven:3.9.9-eclipse-temurin-21
-    permissions:
-      contents: write    # créer la Release GitHub
-      packages: write    # publier sur GitHub Packages
-    env:
-      MAVEN_OPTS: "-Dstyle.color=always"
-      JAR_CORE: core/target/*.jar
-      JAR_API: api/target/*.jar
-      GH_ACTOR: ${{ github.actor }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0, fetch-tags: true }
-
-      - name: Cache Maven repository
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            maven-${{ runner.os }}-
-
-      - name: Build (release)
-        run: mvn -B -DskipITs package
-
-      - name: Configure Maven settings for GitHub Packages
-        shell: bash
+      - name: Setup Maven settings.xml
         run: |
-          set -euo pipefail
-          mkdir -p "$HOME/.m2"
-          cat > "$HOME/.m2/settings.xml" <<EOF
-          <settings>
+          mkdir -p $HOME/.m2
+          cat > $HOME/.m2/settings.xml << 'EOF'
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                                        https://maven.apache.org/xsd/settings-1.0.0.xsd">
             <servers>
               <server>
                 <id>github</id>
-                <username>${GH_ACTOR}</username>
-                <password>${GH_TOKEN}</password>
+                <username>${env.GITHUB_ACTOR}</username>
+                <password>${env.GITHUB_TOKEN}</password>
               </server>
             </servers>
           </settings>
           EOF
-
-      - name: Deploy API release to GitHub Packages
+      - name: Deploy Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
         run: |
-          mvn -B -DskipTests -pl api -am \
-            -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/Molzonas/EkEep \
-            deploy
-
-      - name: Compute previous tag
-        id: prev
-        shell: bash
-        run: |
-          set -e
-          CUR="${GITHUB_REF_NAME}"
-          PREV="$(git tag --sort=-creatordate | grep -E '^v' | sed -n '2p' || true)"
-          if [ -z "$PREV" ]; then PREV="$(git rev-list --max-parents=0 HEAD | head -n1)"; fi
-          echo "prev=$PREV" >> "$GITHUB_OUTPUT"
-          echo "cur=$CUR"   >> "$GITHUB_OUTPUT"
-
-      - name: Generate changelog
-        shell: bash
-        run: |
-          set -e
-          git log --no-merges --pretty=format:'- %h %s (%an)' \
-            "${{ steps.prev.outputs.prev }}..${{ steps.prev.outputs.cur }}" \
-            > RELEASE_NOTES.md
-          sed -i '1i ## Changes\n' RELEASE_NOTES.md
-          sed -i "1i # ${{ steps.prev.outputs.cur }}\n" RELEASE_NOTES.md
-          tail -n +1 RELEASE_NOTES.md
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.prev.outputs.cur }}
-          name: ${{ steps.prev.outputs.cur }}
-          body_path: RELEASE_NOTES.md
-          files: |
-            ${{ env.JAR_CORE }}
-            ${{ env.JAR_API }}
+          mvn -B -DskipTests -s "$HOME/.m2/settings.xml" deploy
