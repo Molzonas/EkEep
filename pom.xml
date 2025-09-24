@@ -21,26 +21,37 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!--                Versions properties                -->
+        <!--             Base Versions properties              -->
         <paper.api.version>1.20.6-R0.1-SNAPSHOT</paper.api.version>
         <adventure.version>4.17.0</adventure.version>
         <minimessage.version>4.17.0</minimessage.version>
-        <cloud.version>1.8.4</cloud.version>
-        <configurate.version>4.2.0</configurate.version>
-        <caffeine.version>3.1.8</caffeine.version>
-        <hikari.version>5.1.0</hikari.version>
-        <jdbi.version>3.45.1</jdbi.version>
-        <flyway.version>10.17.0</flyway.version>
-        <fastutil.version>8.5.12</fastutil.version>
-        <jackson.version>2.17.2</jackson.version>
+
+        <!--              Provided Plugin handlers              -->
         <bstats.version>3.0.2</bstats.version>
-        <mockbukkit.version>3.93.2</mockbukkit.version>
         <luckperms.api.version>5.4</luckperms.api.version>
         <protocollib.version>5.4.0</protocollib.version>
         <modelengine.version>R4.0.8</modelengine.version>
         <mythicmobs.version>5.6.1</mythicmobs.version>
+
+        <!--                 Database Libraries                 -->
+        <jooq.version>3.20.7</jooq.version>
+        <hikari.version>5.1.0</hikari.version>
+        <flyway.version>10.17.0</flyway.version>
+
+        <!--                 Database Providers                 -->
+        <postgresql.version>42.7.4</postgresql.version>
+        <mysql.version>9.4.0</mysql.version>
+        <mariadb.version>3.5.6</mariadb.version>
+        <sqlite.version>3.50.3.0</sqlite.version>
+
+        <!--                   Test Libraries                   -->
+        <mockbukkit.version>3.93.2</mockbukkit.version>
+
+        <!--                   Util Libraries                   -->
+        <caffeine.version>3.1.8</caffeine.version>
+        <fastutil.version>8.5.12</fastutil.version>
+        <jackson.version>2.17.2</jackson.version>
         <acf.version>0.5.1-SNAPSHOT</acf.version>
-        <!--                                                    -->
     </properties>
 
     <repositories>
