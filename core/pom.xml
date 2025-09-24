@@ -172,6 +172,13 @@
             <version>5.10.3</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Apache Commons Collections (for bidi hashmap) -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${apachecommonscollections.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

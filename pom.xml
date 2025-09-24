@@ -52,6 +52,7 @@
         <fastutil.version>8.5.12</fastutil.version>
         <jackson.version>2.17.2</jackson.version>
         <acf.version>0.5.1-SNAPSHOT</acf.version>
+        <apachecommonscollections.version>4.5.0-M2</apachecommonscollections.version>
     </properties>
 
     <repositories>
