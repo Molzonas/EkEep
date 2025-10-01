@@ -1,0 +1,38 @@
+teams-alias:
+  exDirty: "0ed14055-9995-11f0-8869-fa163eb548f0" # Example value, change it to your database values!
+  exEndy: "1ef37b1c-9995-11f0-8869-fa163eb548f0" # Example value, change it to your database values!
+  exSandy: "2e51245f-9995-11f0-8869-fa163eb548f0" # Example value, change it to your database values!
+
+questions:
+  exQuestionId: # Question identifier
+    title: "Question title" # Question title shown to player
+    answers: # List of answers
+      exFirstAnswer: # Answer identifier
+        label: "First answer available" # Proposed answer label shown to player
+        points: # Points given for this answer
+          exDirty: 1 # Example points for team 1
+          exEndy: 10 # Example points for team 2
+          exSandy: 3 # Example points for team 3
+          2e51245f-9995-11f0-8869-fa163eb548f0: 5 # You can also specify an UUID directly
+          # Note: if you don't specify a team, it won't receive any points for this question
+  preferredColor:
+    title: "Quelle est votre couleur préférée ?"
+    answers:
+      blue:
+        label: "Bleu"
+        points:
+          exDirty: 1
+          exEndy: 10
+          exSandy: 1
+      yellow:
+        label: "Jaune"
+        points:
+          exDirty: 1
+          exEndy: 1
+          exSandy: 10
+      green:
+        label: "Vert"
+        points:
+          exDirty: 10
+          exEndy: 1
+          exSandy: 1

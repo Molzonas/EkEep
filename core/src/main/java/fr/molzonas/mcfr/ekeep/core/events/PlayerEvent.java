@@ -1,9 +1,14 @@
-package fr.molzonas.mcfr.ekeep.core.listeners;
+package fr.molzonas.mcfr.ekeep.core.events;
 
+import fr.molzonas.mcfr.ekeep.api.entities.QuizAnswer;
+import fr.molzonas.mcfr.ekeep.api.entities.QuizQuestion;
+import fr.molzonas.mcfr.ekeep.api.entities.QuizTotal;
+import fr.molzonas.mcfr.ekeep.core.Ekeep;
 import fr.molzonas.mcfr.ekeep.core.database.DatabaseManager;
 import fr.molzonas.mcfr.ekeep.core.database.generated.tables.records.EkPlayerRecord;
 import fr.molzonas.mcfr.ekeep.core.database.generated.tables.records.EkTeamRecord;
 import fr.molzonas.mcfr.ekeep.core.utils.EKUtils;
+import fr.molzonas.mcfr.ekeep.core.utils.Reloadable;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
@@ -21,7 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PlayerEvent implements Listener {
+public class PlayerEvent implements Listener, Reloadable {
     private static final DualLinkedHashBidiMap<Team, UUID> PLAYERTEAM_CACHE = new DualLinkedHashBidiMap<>();
 
     @EventHandler
@@ -105,7 +110,21 @@ public class PlayerEvent implements Listener {
     }
 
     private boolean launchQuestions(PlayerJoinEvent event, EkPlayerRecord player) {
+        Optional<QuizTotal> qt = Ekeep.getInstance().getQuizConfig().getQuizTotal();
+        if (qt.isEmpty()) return false;
+        for (QuizQuestion q : qt.get().getQuestions()) {
+            event.getPlayer().sendMessage(EKUtils.toComponent(q.getQuestion()));
+            for (QuizAnswer a : q.getAnswers()) {
+                event.getPlayer().sendMessage("- " + a.getAnswer());
+            }
+            event.getPlayer().sendMessage("---");
+        }
         // TODO quiz to select your team
-        return false;
+        return true;
+    }
+
+    @Override
+    public void reload() {
+        PLAYERTEAM_CACHE.clear();
     }
 }

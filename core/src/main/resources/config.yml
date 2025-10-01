@@ -1,9 +1,27 @@
 debug: false
 enable-update-check: true
 database:
-  type: postgres
-  url: jdbc:postgresql://localhost:5432/database
-  user: user
-  password: password
+  # PostgreSQL / MariaDB / SQLite
+  type: sqlite
+
+  # SQLite
+  file: "plugins/ekEep/ekEep.db"
+
+  # PostgreSQL / MariaDB
+  host: 127.0.0.1
+  port: 3306
+  schema: database
+  username: "root"
+  password: ""
+  sslEnabled: false
+  sslMode: ""
+
+  # Database parameters
+  maximumPoolSize: 10
+  minimumIdle: 2
+  maximumLifetime: 1800000
+  connectionTimeout: 10000
+  idleTimeout: 60000
+
 cache:
   profiles-ttl-seconds: 60

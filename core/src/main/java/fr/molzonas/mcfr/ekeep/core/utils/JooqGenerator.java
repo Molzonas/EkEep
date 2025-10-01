@@ -1,4 +1,4 @@
-package fr.molzonas.mcfr.ekeep.core.database;
+package fr.molzonas.mcfr.ekeep.core.utils;
 
 import org.jooq.codegen.GenerationTool;
 import org.jooq.meta.jaxb.*;

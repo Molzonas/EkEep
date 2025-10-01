@@ -1,5 +1,6 @@
-package fr.molzonas.mcfr.ekeep.core.database;
+package fr.molzonas.mcfr.ekeep.core.database.impl;
 
+import fr.molzonas.mcfr.ekeep.core.database.base.BaseDatabase;
 import fr.molzonas.mcfr.ekeep.core.database.generated.tables.records.EkTeamRecord;
 import org.jooq.DSLContext;
 

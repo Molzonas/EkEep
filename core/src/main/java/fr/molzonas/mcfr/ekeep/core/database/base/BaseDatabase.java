@@ -1,4 +1,4 @@
-package fr.molzonas.mcfr.ekeep.core.database;
+package fr.molzonas.mcfr.ekeep.core.database.base;
 
 import java.util.List;
 import java.util.Optional;
