@@ -1,0 +1,47 @@
+debug: false
+enable-update-check: true
+database:
+  # PostgreSQL / MariaDB / SQLite
+  type: sqlite
+
+  # SQLite
+  file: "plugins/ekEep/ekEep.db"
+
+  # PostgreSQL / MariaDB
+  host: 127.0.0.1
+  port: 3306
+  schema: database
+  username: "root"
+  password: ""
+  ssl-enabled: false
+  ssl-mode: ""
+
+  # Database parameters
+  maximum-pool-size: 10
+  minimum-idle: 2
+  maximum-lifetime: 1800000
+  connection-timeout: 10000
+  idle-timeout: 60000
+
+quiz:
+  # Number of question asked for a player doing the quiz
+  nb-questions: 10
+  # Available asking provider (how to ask something to a player):
+  # "chat" -> Use the chat to ask and answer with simple IDs
+  # "holograms" -> Use FancyHolograms to show and click on answers
+  # "typewriter" -> Use Typewriter type dialogs (currently unsupported)
+  # "inventory" -> Use inventory to show and select an answer
+  ask-provider: "chat"
+  balancing:
+    # Ponderate answers per team population and criteria
+    enabled: true
+    # Available balancing types are:
+    # "simple-count" -> Balance using the number of players per team
+    # "playtime" -> Balance using the total team playtime
+    # "playtime-extended" -> Playtime, but with last player login ponderation
+    balancing-type: "playtime"
+    max-percentage-difference-team: 0.1
+    bonus-per-percent-threshold: 1
+
+cache:
+  profiles-ttl-seconds: 60

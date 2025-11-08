@@ -9,8 +9,10 @@ import fr.molzonas.ekeep.config.YamlConfig;
 import fr.molzonas.ekeep.config.keys.MainConfigKeys;
 import fr.molzonas.ekeep.config.mapper.QuizMapper;
 import fr.molzonas.ekeep.database.DatabaseManager;
+import fr.molzonas.ekeep.event.listener.OnPlayerLogin;
 import fr.molzonas.ekeep.i18n.Message;
 import fr.molzonas.ekeep.logging.EKLogger;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,14 +21,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public final class EkEep extends JavaPlugin {
-    public record BaseContext(JavaPlugin plugin, EKLogger logger, Config config) {}
+    public record BaseContext(EkEep plugin, EKLogger logger, Config config) {}
 
     private final List<Reloadable> reloadableList = new LinkedList<>();
     private DatabaseManager databaseManager;
     private QuizMapper quizMapper;
     private EKLogger logger;
+    private Executor databaseExecutor = Executors.newSingleThreadExecutor();
 
     private BaseContext baseContext;
 
@@ -61,8 +66,8 @@ public final class EkEep extends JavaPlugin {
 
     private void initConfig() {
         this.ekConfig = reloadable(new YamlConfig(this.getConfig()));
-        this.quizMapper = new QuizMapper(YamlConfiguration.loadConfiguration(Objects.requireNonNull(this.getTextResource("quiz.yml"))));
         this.logger = new EKLogger(this, this.ekConfig);
+        this.quizMapper = new QuizMapper(YamlConfiguration.loadConfiguration(Objects.requireNonNull(this.getTextResource("quiz.yml"))));
         this.baseContext = new BaseContext(this, this.logger, this.ekConfig);
     }
 
@@ -76,7 +81,7 @@ public final class EkEep extends JavaPlugin {
     }
 
     private void initEvents() {
-        // TODO
+        Bukkit.getPluginManager().registerEvents(new OnPlayerLogin(this.baseContext, this.databaseManager, this.quizMapper, databaseExecutor), this);
     }
 
     private void initCommands() {
@@ -113,13 +118,5 @@ public final class EkEep extends JavaPlugin {
         reloadableList.stream()
                 .filter(x -> x.reloadableType().equals(type))
                 .forEach(Reloadable::reload);
-    }
-
-    public DatabaseManager getDatabase() {
-        return this.databaseManager;
-    }
-
-    public QuizMapper getQuizMapper() {
-        return this.quizMapper;
     }
 }

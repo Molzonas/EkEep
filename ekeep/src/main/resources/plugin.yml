@@ -1,7 +1,0 @@
-name: EkEep
-version: '0.1-ALPHA'
-main: fr.molzonas.ekeep.bootstrap.EkEep
-api-version: '1.20'
-prefix: EkEep
-authors: [Molzonas]
-description: Large scale extensible team system.

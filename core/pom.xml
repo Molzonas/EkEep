@@ -167,6 +167,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- TAB Integration -->
+        <dependency>
+            <groupId>com.github.NEZNAMY</groupId>
+            <artifactId>TAB-API</artifactId>
+            <version>${tab.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>co.aikar</groupId>
             <artifactId>acf-paper</artifactId>

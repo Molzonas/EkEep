@@ -1,11 +1,9 @@
 package fr.molzonas.ekeep.api.domain.quiz;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class QQuiz {
+    private static final Random RD = new Random();
     private final List<QQuestion> questions;
     private UUID player;
 
@@ -39,6 +37,32 @@ public class QQuiz {
             }
         }
         return rs;
+    }
+
+    public UUID getResultTeamUuid() {
+        Map<UUID, Integer> rs = this.getTotal();
+        UUID team = null;
+        int maxScore = -1;
+        for (Map.Entry<UUID, Integer> u : rs.entrySet()) {
+            if (u.getValue() > maxScore && maxScore > 0) {
+                maxScore = u.getValue();
+                team = u.getKey();
+            }
+        }
+        return team;
+    }
+
+    public List<QQuestion> getRandomQuestions(int nb) {
+        if (nb <= 0) return new ArrayList<>();
+        if (nb >= this.questions.size()) return this.questions;
+        List<QQuestion> rdQuestions = new ArrayList<>(this.questions);
+        List<QQuestion> rdQuestionsResult = new ArrayList<>();
+        Collections.shuffle(rdQuestions);
+        for (int i = 0; i < nb; i++) {
+            int randIndex = RD.nextInt(rdQuestions.size());
+            rdQuestionsResult.add(rdQuestions.get(randIndex));
+        }
+        return rdQuestionsResult;
     }
 
     public static QQuiz copy(QQuiz q) {

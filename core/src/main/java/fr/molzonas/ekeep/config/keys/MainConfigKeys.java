@@ -20,13 +20,13 @@ public enum MainConfigKeys implements ConfigKey {
     USERNAME("database.username", String.class, "root"),
     PASSWORD("database.password", String.class, ""),
     FILE("database.file", String.class, "plugins/ekEep/ekEep.db"),
-    MAXIMUM_POOL_SIZE("database.maximumPoolSize", Integer.class, 10),
-    MINIMUM_IDLE("database.minimumIdle", Integer.class, 2),
-    MAXIMUM_LIFETIME("database.maximumLifetime", Integer.class, 1_800_000),
-    CONNECTION_TIMEOUT("database.connectionTimeout", Integer.class, 10_000),
-    IDLE_TIMEOUT("database.idleTimeout", Integer.class, 60_000),
-    SSL_ENABLED("database.sslEnabled", Boolean.class, false),
-    SSL_MODE("database.sslMode", String.class, ""),
+    MAXIMUM_POOL_SIZE("database.maximum-pool-size", Integer.class, 10),
+    MINIMUM_IDLE("database.minimum-idle", Integer.class, 2),
+    MAXIMUM_LIFETIME("database.maximum-lifetime", Integer.class, 1_800_000),
+    CONNECTION_TIMEOUT("database.connection-timeout", Integer.class, 10_000),
+    IDLE_TIMEOUT("database.idle-timeout", Integer.class, 60_000),
+    SSL_ENABLED("database.ssl-enabled", Boolean.class, false),
+    SSL_MODE("database.ssl-mode", String.class, ""),
     ;
 
     private final String path;

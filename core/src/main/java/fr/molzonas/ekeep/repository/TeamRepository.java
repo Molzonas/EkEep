@@ -5,6 +5,9 @@ import fr.molzonas.ekeep.database.generated.tables.EkPlayer;
 import fr.molzonas.ekeep.database.generated.tables.EkTeam;
 import fr.molzonas.ekeep.database.generated.tables.records.EkTeamRecord;
 
+import static org.jooq.impl.DSL.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,6 +44,15 @@ public class TeamRepository {
                 .select()
                 .from(EkTeam.EK_TEAM)
                 .fetchInto(EkTeamRecord.class);
+    }
+
+    public long selectTeamPlayertime(UUID teamUuid) {
+        EkPlayer p = new EkPlayer("p");
+        return this.db.dsl()
+                .select(sum(p.TOTAL_PLAYTIME))
+                .from(p)
+                .where(p.TEAM_UUID.eq(teamUuid.toString()))
+                .fetchSingleInto(BigDecimal.class).longValue();
     }
 
     public Optional<EkTeamRecord> selectByPlayer(UUID uuid) {
