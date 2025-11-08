@@ -2,6 +2,8 @@ package fr.molzonas.mcfr.ekeep.core.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import fr.molzonas.mcfr.ekeep.api.exceptions.DatabaseInitException;
+import fr.molzonas.mcfr.ekeep.api.exceptions.enums.DatabaseInitExceptionStep;
 import fr.molzonas.mcfr.ekeep.core.Ekeep;
 import fr.molzonas.mcfr.ekeep.core.configs.Config;
 import fr.molzonas.mcfr.ekeep.core.configs.DatabaseConfiguration;
@@ -29,10 +31,10 @@ public class DatabaseManager {
     private HikariDataSource dataSource;
     private PlayerDatabase playerDatabase;
     private TeamDatabase teamDatabase;
+    private boolean up = false;
 
     public DatabaseManager(DatabaseConfiguration config) {
         this.config = config;
-        this.load();
     }
 
     public static DatabaseManager init(DatabaseConfiguration config) {
@@ -52,14 +54,26 @@ public class DatabaseManager {
         return teamDatabase;
     }
 
-    protected void load() {
+    public DatabaseManager load() throws DatabaseInitException {
         BaseProvider provider;
         DSLContext dslContext;
         Config ekConfig = Ekeep.getInstance().getMainConfig();
         String type = ekConfig.get(DBConfigKeys.TYPE, new TypeRef<String>() {});
         provider = getProvider(type);
         if (provider == null) {
-            throw new IllegalStateException("Provider not found");
+            throw new DatabaseInitException(DatabaseInitExceptionStep.PROVIDER_INITIALIZATION, "Provider not found");
+        }
+
+        BaseProvider.ProviderResult pr = provider.init(config);
+        if (!pr.isOk()) {
+            EKUtils.error("An error as been found in database initialization :");
+            EKUtils.error(pr.message());
+            if (pr.e() != null) {
+                EKUtils.debug(pr.e().getMessage());
+                throw new DatabaseInitException(DatabaseInitExceptionStep.PROVIDER_INITIALIZATION, pr.message(), pr.e());
+            } else {
+                throw new DatabaseInitException(DatabaseInitExceptionStep.PROVIDER_INITIALIZATION, pr.message());
+            }
         }
 
         HikariConfig hc = new HikariConfig();
@@ -100,6 +114,10 @@ public class DatabaseManager {
         dslContext = DSL.using(dataSource, provider.dialect(), st);
         this.playerDatabase = new PlayerDatabase(dslContext);
         this.teamDatabase = new TeamDatabase(dslContext);
+
+        this.up = true;
+
+        return this;
     }
 
     public BaseProvider getProvider(String type) {
@@ -113,5 +131,9 @@ public class DatabaseManager {
 
     public void shutdown() {
         this.dataSource.close();
+    }
+
+    public boolean isUp() {
+        return this.up;
     }
 }

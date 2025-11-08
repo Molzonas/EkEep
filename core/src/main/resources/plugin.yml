@@ -8,3 +8,5 @@ author: Molzonas
 website: https://github.com/Molzonas/EkEep
 contributors: [PaperMC]
 load: POSTWORLD
+
+softdepend: [ bstats, luckperms, protocollib, modelengine, mythicmobs, facyholograms ]

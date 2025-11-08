@@ -7,6 +7,7 @@ import fr.molzonas.mcfr.ekeep.core.configs.keys.DBConfigKeys;
 import fr.molzonas.mcfr.ekeep.core.configs.keys.MainConfigKeys;
 import fr.molzonas.mcfr.ekeep.core.database.DatabaseManager;
 import fr.molzonas.mcfr.ekeep.core.events.PlayerEvent;
+import fr.molzonas.mcfr.ekeep.core.utils.DependenciesChecker;
 import fr.molzonas.mcfr.ekeep.core.utils.EKUtils;
 import fr.molzonas.mcfr.ekeep.core.utils.GitUpdateChecker;
 import fr.molzonas.mcfr.ekeep.core.utils.Reloadable;
@@ -25,12 +26,15 @@ public final class Ekeep extends JavaPlugin {
     private static Ekeep instance;
     private Config mainConfig;
     private QuizConfiguration quizConfiguration;
-    private final List<Reloadable> reloadables = Collections.synchronizedList(new LinkedList<>());
+    private DependenciesChecker dependenciesChecker;
+    private final List<Reloadable> reloadableList = Collections.synchronizedList(new LinkedList<>());
     private final List<Listener> listeners = Collections.synchronizedList(new LinkedList<>());
 
     @Override
     public void onEnable() {
         instance = this;
+
+        this.dependenciesChecker = new DependenciesChecker(this);
 
         initResources();
         initConfig();
@@ -62,13 +66,7 @@ public final class Ekeep extends JavaPlugin {
     }
 
     private void initDatabase() {
-        // TODO REMOVE
-        for (DBConfigKeys key : DBConfigKeys.values()) {
-            EKUtils.info(String.format("%s -> {%s}", key.toString(), this.mainConfig.get(key)));
-        }
-        // TODO REMOVE
-
-        save(DatabaseManager.init(DatabaseConfiguration.getFromConfiguration(this.mainConfig)));
+        save(DatabaseManager.init(DatabaseConfiguration.getFromConfiguration(this.mainConfig)).load());
     }
 
     private void initListeners() {
@@ -76,7 +74,7 @@ public final class Ekeep extends JavaPlugin {
     }
 
     private void initCommands() {
-
+        // TODO create commands as defined for EkEep
     }
 
     public Config getMainConfig() {
@@ -90,12 +88,13 @@ public final class Ekeep extends JavaPlugin {
     }
 
     public void reload() {
-        reloadables.forEach(Reloadable::reload);
+        reloadableList.forEach(Reloadable::reload);
+        this.dependenciesChecker.reload();
     }
 
     private <T> T save(T value) {
         if (value instanceof Reloadable r) {
-            this.reloadables.add(r);
+            this.reloadableList.add(r);
         }
         if (value instanceof Listener l) {
             this.listeners.add(l);
