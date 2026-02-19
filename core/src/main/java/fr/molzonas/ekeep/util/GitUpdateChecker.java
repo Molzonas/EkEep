@@ -1,5 +1,6 @@
 package fr.molzonas.ekeep.util;
 
+import fr.molzonas.ekeep.logging.EKLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -102,13 +103,13 @@ public class GitUpdateChecker {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
                 checkLatest(current, tokenOpt).thenAccept(res -> {
                     if (res.latest().equals("unknown")) {
-                        plugin.getLogger().info(EKUtils.LOG_PREFIX + "Unable to retrieve latest version (offline/GitHub unavailable).");
+                        plugin.getLogger().info(EKLogger.LOG_PREFIX + "Unable to retrieve latest version (offline/GitHub unavailable).");
                         return;
                     }
                     if (res.upToDate()) {
-                        plugin.getLogger().info(EKUtils.LOG_PREFIX + "Up to date (" + res.current() + ").");
+                        plugin.getLogger().info(EKLogger.LOG_PREFIX + "Up to date (" + res.current() + ").");
                     } else {
-                        plugin.getLogger().warning(EKUtils.LOG_PREFIX + "New version available: " + res.latest() +
+                        plugin.getLogger().warning(EKLogger.LOG_PREFIX + "New version available: " + res.latest() +
                                 " (current: " + res.current() + ") → " + res.url());
                     }
                 })

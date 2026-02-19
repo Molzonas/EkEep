@@ -14,7 +14,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>EkEep</name>
+    <name>EkEep Core</name>
 
     <properties>
         <java.version>21</java.version>

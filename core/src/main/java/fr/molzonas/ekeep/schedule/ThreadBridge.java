@@ -12,9 +12,11 @@ import java.util.function.Supplier;
 
 public final class ThreadBridge {
     private final Executor db;
+    private final EkEep plugin;
 
-    public ThreadBridge(Executor db) {
+    public ThreadBridge(EkEep plugin, Executor db) {
         this.db = db;
+        this.plugin = plugin;
     }
 
     public <T> CompletableFuture<T> dbCall(Callable<T> c) {
@@ -29,7 +31,7 @@ public final class ThreadBridge {
 
     public <T> CompletableFuture<T> syncSupply(Supplier<T> sup) {
         CompletableFuture<T> future = new CompletableFuture<>();
-        Bukkit.getScheduler().runTask(EkEep.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(this.plugin, () -> {
             try {
                 future.complete(sup.get());
             } catch (Throwable t) {

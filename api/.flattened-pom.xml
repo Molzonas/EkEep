@@ -10,6 +10,7 @@
   <groupId>fr.molzonas</groupId>
   <artifactId>ekeep-api</artifactId>
   <version>0.1-SNAPSHOT</version>
+  <name>EkEep API</name>
   <properties>
     <maven.compiler.target>21</maven.compiler.target>
     <maven.compiler.source>21</maven.compiler.source>

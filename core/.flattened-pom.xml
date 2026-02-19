@@ -10,14 +10,14 @@
   <groupId>fr.molzonas</groupId>
   <artifactId>ekeep</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <name>EkEep</name>
+  <name>EkEep Core</name>
   <properties>
     <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
     <dependency>
-      <groupId>fr.molzonas.mcfr</groupId>
+      <groupId>fr.molzonas</groupId>
       <artifactId>ekeep-api</artifactId>
     </dependency>
     <dependency>
@@ -131,6 +131,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.github.NEZNAMY</groupId>
+      <artifactId>TAB-API</artifactId>
+      <version>${tab.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>co.aikar</groupId>
       <artifactId>acf-paper</artifactId>
       <version>${acf.version}</version>
@@ -151,12 +157,6 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
       <version>${apachecommonscollections.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>fr.molzonas</groupId>
-      <artifactId>ekeep-api</artifactId>
-      <version>0.1-SNAPSHOT</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
   <build>

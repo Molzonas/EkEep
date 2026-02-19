@@ -32,7 +32,7 @@ public class OnPlayerLogin implements Listener {
     private final QuizMapper quizMapper;
 
     public OnPlayerLogin(EkEep.BaseContext baseContext, DatabaseManager dbManager, QuizMapper quizzMapper, Executor dbExecutor) {
-        this.thread = new ThreadBridge(dbExecutor);
+        this.thread = new ThreadBridge(baseContext.plugin(), dbExecutor);
         this.baseContext = baseContext;
         this.playerRepository = dbManager.player();
         this.teamRepository = dbManager.team();

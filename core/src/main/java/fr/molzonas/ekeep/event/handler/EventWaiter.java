@@ -17,9 +17,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public final class EventWaiter implements Listener {
+    private EkEep plugin;
+
+    public EventWaiter(EkEep plugin) {
+        this.plugin = plugin;
+    }
 
     public void register() {
-        Bukkit.getPluginManager().registerEvents(this, EkEep.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, this.plugin);
     }
 
     public <T> CompletableFuture<T> awaitChatReply(Player p,
@@ -28,7 +33,7 @@ public final class EventWaiter implements Listener {
         CompletableFuture<T> future = new CompletableFuture<>();
         UUID id = p.getUniqueId();
 
-        var task = Bukkit.getScheduler().runTaskLater(EkEep.getInstance(),
+        var task = Bukkit.getScheduler().runTaskLater(this.plugin,
                 () -> {
                     if (!future.isDone()) future.completeExceptionally(new RuntimeException("timeout"));
                 },
@@ -64,7 +69,7 @@ public final class EventWaiter implements Listener {
             }
         };
 
-        Bukkit.getPluginManager().registerEvents(listener, EkEep.getInstance());
+        Bukkit.getPluginManager().registerEvents(listener, this.plugin);
         return future;
     }
 }

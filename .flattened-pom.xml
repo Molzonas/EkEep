@@ -6,9 +6,10 @@
   <artifactId>ekeep-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <name>EkEep</name>
   <modules>
-    <module>api/.flattened-pom.xml</module>
-    <module>core/.flattened-pom.xml</module>
+    <module>api</module>
+    <module>core</module>
   </modules>
   <distributionManagement>
     <repository>
@@ -42,6 +43,7 @@
     <luckperms.api.version>5.4</luckperms.api.version>
     <maven.compiler.source>21</maven.compiler.source>
     <maven-shade-plugin.version>3.5.2</maven-shade-plugin.version>
+    <tab.version>5.3.2</tab.version>
     <revision>0.1-SNAPSHOT</revision>
     <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
     <maven.compiler.target>21</maven.compiler.target>
@@ -51,8 +53,8 @@
     <fastutil.version>8.5.12</fastutil.version>
     <fancyholograms.version>2.7.0</fancyholograms.version>
     <postgresql.version>42.7.4</postgresql.version>
-    <bstats.version>3.0.2</bstats.version>
     <paper.api.version>1.20.6-R0.1-SNAPSHOT</paper.api.version>
+    <bstats.version>3.0.2</bstats.version>
     <mariadb.version>3.5.6</mariadb.version>
     <mysql.version>9.4.0</mysql.version>
     <fatten-maven-plugin.version>1.5.0</fatten-maven-plugin.version>
@@ -114,6 +116,10 @@
     <repository>
       <id>fancyinnovations-releases</id>
       <url>https://repo.fancyinnovations.com/releases</url>
+    </repository>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
     </repository>
   </repositories>
   <build>
