@@ -12,7 +12,6 @@ import fr.molzonas.ekeep.repository.TeamRepository;
 import fr.molzonas.ekeep.schedule.ThreadBridge;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
-import me.neznamy.tab.api.nametag.NameTagManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

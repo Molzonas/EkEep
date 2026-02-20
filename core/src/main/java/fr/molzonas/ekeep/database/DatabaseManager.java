@@ -1,28 +1,28 @@
 package fr.molzonas.ekeep.database;
 
 import fr.molzonas.ekeep.bootstrap.EkEep;
+import fr.molzonas.ekeep.database.internal.DatabaseBootstrap;
 import fr.molzonas.ekeep.repository.PlayerRepository;
 import fr.molzonas.ekeep.repository.TeamRepository;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.function.Predicate;
+import java.util.Objects;
 
-public class DatabaseManager {
+public class DatabaseManager implements AutoCloseable {
+    private final Database database;
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
-    private final EkEep.BaseContext baseContext;
-    private ExecutorService executors = Executors.newFixedThreadPool(10);
 
-    public DatabaseManager(EkEep.BaseContext baseContext) {
-        this.baseContext = baseContext;
-        DatabaseConfiguration dbConfig = DatabaseConfiguration.getFromConfiguration(this.baseContext.config());
-        Database db = new DatabaseImpl(dbConfig);
+    public DatabaseManager(EkEep.BaseContext context) {
+        Objects.requireNonNull(context, "Context");
 
-        playerRepository = new PlayerRepository(db);
-        teamRepository = new TeamRepository(db);
+        DatabaseConfiguration dbConfig = DatabaseConfiguration.getFromConfiguration(context.config());
+        this.database = DatabaseBootstrap.create(context, dbConfig);
+        this.playerRepository = new PlayerRepository(database);
+        this.teamRepository = new TeamRepository(database);
+    }
+
+    public Database getDatabase() {
+        return this.database;
     }
 
     public PlayerRepository player() {
@@ -31,5 +31,10 @@ public class DatabaseManager {
 
     public TeamRepository team() {
         return this.teamRepository;
+    }
+
+    @Override
+    public void close() throws Exception {
+        database.close();
     }
 }

@@ -7,18 +7,18 @@ import org.jooq.SQLDialect;
 import java.io.File;
 import java.io.IOException;
 
-public class SQLiteProvider implements Provider {
+public class SQLiteProvider implements DbProvider {
     @Override
     public SQLDialect dialect() {
         return SQLDialect.SQLITE;
     }
 
     @Override
-    public String jdbcUrl(DatabaseConfiguration c) {
-        return "jdbc:sqlite:" + c.getFile() + "?journal_mode=WAL&busy_timeout=5000";
+    public String jdbcUrl(DatabaseConfiguration databaseConfiguration) {
+        return "jdbc:sqlite:" + databaseConfiguration.getFile() + "?journal_mode=WAL&busy_timeout=5000";
     }
 
-    @Override public void tune(HikariConfig hc, DatabaseConfiguration mc) {
+    @Override public void tune(HikariConfig hc, DatabaseConfiguration databaseConfiguration) {
         hc.setMaximumPoolSize(1);
         hc.setMinimumIdle(1);
     }

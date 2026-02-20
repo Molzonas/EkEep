@@ -3,14 +3,14 @@ package fr.molzonas.ekeep.database.provider;
 import fr.molzonas.ekeep.database.DatabaseConfiguration;
 import org.jooq.SQLDialect;
 
-public class H2Provider implements Provider {
+public class H2Provider implements DbProvider {
     @Override
     public SQLDialect dialect() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public String jdbcUrl(DatabaseConfiguration mzDatabaseConfiguration) {
+    public String jdbcUrl(DatabaseConfiguration databaseConfiguration) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

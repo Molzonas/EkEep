@@ -1,6 +1,5 @@
 package fr.molzonas.ekeep.logging;
 
-import org.bukkit.Bukkit;
 import org.jooq.ExecuteContext;
 import org.jooq.ExecuteListener;
 

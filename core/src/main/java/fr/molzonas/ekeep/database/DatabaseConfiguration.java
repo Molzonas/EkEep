@@ -10,7 +10,7 @@ public class DatabaseConfiguration {
     private String host = "127.0.0.1";
     private int port = 3306;
     private String database = "root";
-    private String  username = "username";
+    private String username = "username";
     private String password = "password";
     private String file = "plugins/MyPlugin/myplugin.db";
     private int maximumPoolSize = 10;
@@ -21,17 +21,21 @@ public class DatabaseConfiguration {
     private boolean sslEnabled = false;
     private String sslMode = "";
 
-    private DatabaseConfiguration() {}
-
-    public static Builder builder() {
-        return new Builder();
+    private DatabaseConfiguration() {
     }
+
+    public static DatabaseConfiguration.Builder builder() {
+        return new DatabaseConfiguration.Builder();
+    }
+
     public boolean isSQLite() {
         return "sqlite".equalsIgnoreCase(type);
     }
+
     public boolean isMariaDB() {
         return List.of("maria", "mariadb", "mariadbsql").contains(type.toLowerCase());
     }
+
     public boolean isPostgreSQL() {
         return List.of("postgres", "postgresql", "postgre").contains(type.toLowerCase());
     }
@@ -105,87 +109,95 @@ public class DatabaseConfiguration {
         if (config.exists(MainConfigKeys.USERNAME)) builder.setUsername(config.getOrDefault(MainConfigKeys.USERNAME));
         if (config.exists(MainConfigKeys.PASSWORD)) builder.setPassword(config.getOrDefault(MainConfigKeys.PASSWORD));
         if (config.exists(MainConfigKeys.FILE)) builder.setFile(config.getOrDefault(MainConfigKeys.FILE));
-        if (config.exists(MainConfigKeys.MAXIMUM_POOL_SIZE)) builder.setMaximumPoolSize(config.getOrDefault(MainConfigKeys.MAXIMUM_POOL_SIZE));
-        if (config.exists(MainConfigKeys.MINIMUM_IDLE)) builder.setMinimumIdle(config.getOrDefault(MainConfigKeys.MINIMUM_IDLE));
-        if (config.exists(MainConfigKeys.MAXIMUM_LIFETIME)) builder.setMaximumLifetime(config.getOrDefault(MainConfigKeys.MAXIMUM_LIFETIME));
-        if (config.exists(MainConfigKeys.CONNECTION_TIMEOUT)) builder.setConnectionTimeout(config.getOrDefault(MainConfigKeys.CONNECTION_TIMEOUT));
-        if (config.exists(MainConfigKeys.IDLE_TIMEOUT)) builder.setIdleTimeout(config.getOrDefault(MainConfigKeys.IDLE_TIMEOUT));
-        if (config.exists(MainConfigKeys.SSL_ENABLED)) builder.setSslEnabled(config.getOrDefault(MainConfigKeys.SSL_ENABLED));
+        if (config.exists(MainConfigKeys.MAXIMUM_POOL_SIZE))
+            builder.setMaximumPoolSize(config.getOrDefault(MainConfigKeys.MAXIMUM_POOL_SIZE));
+        if (config.exists(MainConfigKeys.MINIMUM_IDLE))
+            builder.setMinimumIdle(config.getOrDefault(MainConfigKeys.MINIMUM_IDLE));
+        if (config.exists(MainConfigKeys.MAXIMUM_LIFETIME))
+            builder.setMaximumLifetime(config.getOrDefault(MainConfigKeys.MAXIMUM_LIFETIME));
+        if (config.exists(MainConfigKeys.CONNECTION_TIMEOUT))
+            builder.setConnectionTimeout(config.getOrDefault(MainConfigKeys.CONNECTION_TIMEOUT));
+        if (config.exists(MainConfigKeys.IDLE_TIMEOUT))
+            builder.setIdleTimeout(config.getOrDefault(MainConfigKeys.IDLE_TIMEOUT));
+        if (config.exists(MainConfigKeys.SSL_ENABLED))
+            builder.setSslEnabled(config.getOrDefault(MainConfigKeys.SSL_ENABLED));
         if (config.exists(MainConfigKeys.SSL_MODE)) builder.setSslMode(config.getOrDefault(MainConfigKeys.SSL_MODE));
         return builder.build();
     }
 
     public static class Builder {
         final DatabaseConfiguration mzDatabaseConfiguration;
+
         public Builder() {
             this.mzDatabaseConfiguration = new DatabaseConfiguration();
         }
-        public Builder setType(String type) {
+
+        public DatabaseConfiguration.Builder setType(String type) {
             this.mzDatabaseConfiguration.type = type;
             return this;
         }
 
-        public Builder setHost(String host) {
+        public DatabaseConfiguration.Builder setHost(String host) {
             this.mzDatabaseConfiguration.host = host;
             return this;
         }
 
-        public Builder setPort(int port) {
+        public DatabaseConfiguration.Builder setPort(int port) {
             this.mzDatabaseConfiguration.port = port;
             return this;
         }
 
-        public Builder setDatabase(String database) {
+        public DatabaseConfiguration.Builder setDatabase(String database) {
             this.mzDatabaseConfiguration.database = database;
             return this;
         }
 
-        public Builder setUsername(String username) {
+        public DatabaseConfiguration.Builder setUsername(String username) {
             this.mzDatabaseConfiguration.username = username;
             return this;
         }
 
-        public Builder setPassword(String password) {
+        public DatabaseConfiguration.Builder setPassword(String password) {
             this.mzDatabaseConfiguration.password = password;
             return this;
         }
 
-        public Builder setFile(String file) {
+        public DatabaseConfiguration.Builder setFile(String file) {
             this.mzDatabaseConfiguration.file = file;
             return this;
         }
 
-        public Builder setMaximumPoolSize(int maximumPoolSize) {
+        public DatabaseConfiguration.Builder setMaximumPoolSize(int maximumPoolSize) {
             this.mzDatabaseConfiguration.maximumPoolSize = maximumPoolSize;
             return this;
         }
 
-        public Builder setMinimumIdle(int minimumIdle) {
+        public DatabaseConfiguration.Builder setMinimumIdle(int minimumIdle) {
             this.mzDatabaseConfiguration.minimumIdle = minimumIdle;
             return this;
         }
 
-        public Builder setMaximumLifetime(int maximumLifetime) {
+        public DatabaseConfiguration.Builder setMaximumLifetime(int maximumLifetime) {
             this.mzDatabaseConfiguration.maximumLifetime = maximumLifetime;
             return this;
         }
 
-        public Builder setConnectionTimeout(int connectionTimeout) {
+        public DatabaseConfiguration.Builder setConnectionTimeout(int connectionTimeout) {
             this.mzDatabaseConfiguration.connectionTimeout = connectionTimeout;
             return this;
         }
 
-        public Builder setIdleTimeout(int idleTimeout) {
+        public DatabaseConfiguration.Builder setIdleTimeout(int idleTimeout) {
             this.mzDatabaseConfiguration.idleTimeout = idleTimeout;
             return this;
         }
 
-        public Builder setSslEnabled(boolean sslEnabled) {
+        public DatabaseConfiguration.Builder setSslEnabled(boolean sslEnabled) {
             this.mzDatabaseConfiguration.sslEnabled = sslEnabled;
             return this;
         }
 
-        public Builder setSslMode(String sslMode) {
+        public DatabaseConfiguration.Builder setSslMode(String sslMode) {
             this.mzDatabaseConfiguration.sslMode = sslMode;
             return this;
         }

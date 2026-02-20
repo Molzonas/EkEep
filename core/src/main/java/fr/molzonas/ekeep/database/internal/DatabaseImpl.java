@@ -1,23 +1,25 @@
-package fr.molzonas.ekeep.database;
+package fr.molzonas.ekeep.database.internal;
 
-import com.zaxxer.hikari.HikariDataSource;
-import fr.molzonas.ekeep.database.provider.Provider;
+import fr.molzonas.ekeep.database.Database;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public final class DatabaseImpl implements Database {
-    private final JooqProvider provider;
-    public DatabaseImpl(DatabaseConfiguration config) {
-        HikariDataSource dataSource = DataSourceFactory.create(config);
-        this.provider = new JooqProvider(dataSource, Provider.select(config.getType()));
+public class DatabaseImpl implements Database {
+    private final DSLContext dsl;
+    private final AutoCloseable closeable;
+
+    public DatabaseImpl(DSLContext dsl, AutoCloseable closeable) {
+        this.dsl = Objects.requireNonNull(dsl);
+        this.closeable = Objects.requireNonNull(closeable);
     }
 
     @Override
     public DSLContext dsl() {
-        return provider.dsl();
+        return dsl;
     }
 
     @Override
@@ -34,6 +36,10 @@ public final class DatabaseImpl implements Database {
 
     @Override
     public void close() {
-        this.provider.close();
+        try {
+            this.closeable.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to close the database", e);
+        }
     }
 }

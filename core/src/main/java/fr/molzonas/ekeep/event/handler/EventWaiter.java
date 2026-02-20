@@ -3,7 +3,6 @@ package fr.molzonas.ekeep.event.handler;
 import fr.molzonas.ekeep.bootstrap.EkEep;
 import fr.molzonas.ekeep.util.EKUtils;
 import io.papermc.paper.event.player.AsyncChatEvent;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public final class EventWaiter implements Listener {
-    private EkEep plugin;
+    private final EkEep plugin;
 
     public EventWaiter(EkEep plugin) {
         this.plugin = plugin;

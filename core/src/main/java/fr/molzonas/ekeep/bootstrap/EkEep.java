@@ -52,6 +52,11 @@ public final class EkEep extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        try {
+            this.databaseExecutor.wait();
+        } catch (InterruptedException e) {
+            this.logger.error("Failed to wait for database executor to finish", e);
+        }
         getServer().getServicesManager().unregister(EkEepApi.class);
         Message.unload();
         this.logger.info("EkEep has been disabled");
@@ -77,7 +82,7 @@ public final class EkEep extends JavaPlugin {
     }
 
     private void initDatabase() {
-        this.databaseManager = new DatabaseManager(baseContext);
+        this.databaseManager = new DatabaseManager(this.baseContext);
     }
 
     private void initEvents() {

@@ -7,4 +7,9 @@ public class MariaDBProvider extends MySQLProvider {
     public SQLDialect dialect() {
         return SQLDialect.MARIADB;
     }
+
+    @Override
+    public String migrationLocation() {
+        return "classpath:database/migration/mariadb";
+    }
 }

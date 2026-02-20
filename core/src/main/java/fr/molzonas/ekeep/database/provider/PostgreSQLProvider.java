@@ -4,21 +4,21 @@ import com.zaxxer.hikari.HikariConfig;
 import fr.molzonas.ekeep.database.DatabaseConfiguration;
 import org.jooq.SQLDialect;
 
-public class PostgreSQLProvider implements Provider {
+public class PostgreSQLProvider implements DbProvider {
     @Override
     public SQLDialect dialect() {
         return SQLDialect.POSTGRES;
     }
 
     @Override
-    public String jdbcUrl(DatabaseConfiguration c) {
-        String sslMode = c.getSslMode() == null || c.getSslMode().isBlank() ? "require" : c.getSslMode();
-        String mode = c.isSslEnabled() ? sslMode : "disable";
-        return "jdbc:postgresql://" + c.getHost() + ":" + c.getPort() + "/" + c.getDatabase() + "?sslmode=" + mode;
+    public String jdbcUrl(DatabaseConfiguration databaseConfiguration) {
+        String sslMode = databaseConfiguration.getSslMode() == null || databaseConfiguration.getSslMode().isBlank() ? "require" : databaseConfiguration.getSslMode();
+        String mode = databaseConfiguration.isSslEnabled() ? sslMode : "disable";
+        return "jdbc:postgresql://" + databaseConfiguration.getHost() + ":" + databaseConfiguration.getPort() + "/" + databaseConfiguration.getDatabase() + "?sslmode=" + mode;
     }
 
     @Override
-    public void tune(HikariConfig hc, DatabaseConfiguration mc) {
+    public void tune(HikariConfig hc, DatabaseConfiguration databaseConfiguration) {
         hc.addDataSourceProperty("reWriteBatchedInserts", "true");
     }
 
