@@ -88,7 +88,7 @@ public final class DatabaseBootstrap {
             Flyway flyway = Flyway.configure()
                     .dataSource(dataSource)
                     .locations(provider.migrationLocation())
-                    .baselineOnMigrate(true)
+                    .baselineOnMigrate(config.isBaselineOnMigrate())
                     .load();
 
             flyway.migrate();

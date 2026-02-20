@@ -19,6 +19,7 @@ public class DatabaseConfiguration {
     private int connectionTimeout = 10000;
     private int idleTimeout = 60000;
     private boolean sslEnabled = false;
+    private boolean baselineOnMigrate = false;
     private String sslMode = "";
 
     private DatabaseConfiguration() {
@@ -96,6 +97,10 @@ public class DatabaseConfiguration {
         return sslMode;
     }
 
+    public boolean isBaselineOnMigrate() {
+        return baselineOnMigrate;
+    }
+
     public static DatabaseConfiguration getDefault() {
         return new DatabaseConfiguration();
     }
@@ -122,6 +127,7 @@ public class DatabaseConfiguration {
         if (config.exists(MainConfigKeys.SSL_ENABLED))
             builder.setSslEnabled(config.getOrDefault(MainConfigKeys.SSL_ENABLED));
         if (config.exists(MainConfigKeys.SSL_MODE)) builder.setSslMode(config.getOrDefault(MainConfigKeys.SSL_MODE));
+        if (config.exists(MainConfigKeys.BASELINE_ON_MIGRATE)) builder.setBaselineOnMigrate(config.getOrDefault(MainConfigKeys.BASELINE_ON_MIGRATE));
         return builder.build();
     }
 
@@ -132,74 +138,64 @@ public class DatabaseConfiguration {
             this.mzDatabaseConfiguration = new DatabaseConfiguration();
         }
 
-        public DatabaseConfiguration.Builder setType(String type) {
+        public void setType(String type) {
             this.mzDatabaseConfiguration.type = type;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setHost(String host) {
+        public void setHost(String host) {
             this.mzDatabaseConfiguration.host = host;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setPort(int port) {
+        public void setPort(int port) {
             this.mzDatabaseConfiguration.port = port;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setDatabase(String database) {
+        public void setDatabase(String database) {
             this.mzDatabaseConfiguration.database = database;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setUsername(String username) {
+        public void setUsername(String username) {
             this.mzDatabaseConfiguration.username = username;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setPassword(String password) {
+        public void setPassword(String password) {
             this.mzDatabaseConfiguration.password = password;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setFile(String file) {
+        public void setFile(String file) {
             this.mzDatabaseConfiguration.file = file;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setMaximumPoolSize(int maximumPoolSize) {
+        public void setMaximumPoolSize(int maximumPoolSize) {
             this.mzDatabaseConfiguration.maximumPoolSize = maximumPoolSize;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setMinimumIdle(int minimumIdle) {
+        public void setMinimumIdle(int minimumIdle) {
             this.mzDatabaseConfiguration.minimumIdle = minimumIdle;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setMaximumLifetime(int maximumLifetime) {
+        public void setMaximumLifetime(int maximumLifetime) {
             this.mzDatabaseConfiguration.maximumLifetime = maximumLifetime;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setConnectionTimeout(int connectionTimeout) {
+        public void setConnectionTimeout(int connectionTimeout) {
             this.mzDatabaseConfiguration.connectionTimeout = connectionTimeout;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setIdleTimeout(int idleTimeout) {
+        public void setIdleTimeout(int idleTimeout) {
             this.mzDatabaseConfiguration.idleTimeout = idleTimeout;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setSslEnabled(boolean sslEnabled) {
+        public void setSslEnabled(boolean sslEnabled) {
             this.mzDatabaseConfiguration.sslEnabled = sslEnabled;
-            return this;
         }
 
-        public DatabaseConfiguration.Builder setSslMode(String sslMode) {
+        public void setSslMode(String sslMode) {
             this.mzDatabaseConfiguration.sslMode = sslMode;
-            return this;
+        }
+
+        public void setBaselineOnMigrate(boolean baselineOnMigrate) {
+            this.mzDatabaseConfiguration.baselineOnMigrate = baselineOnMigrate;
         }
 
         public DatabaseConfiguration build() {

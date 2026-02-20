@@ -22,6 +22,7 @@ database:
   maximum-lifetime: 1800000
   connection-timeout: 10000
   idle-timeout: 60000
+  baseline-on-migrate: false
 
 quiz:
   # Number of question asked for a player doing the quiz

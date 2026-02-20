@@ -27,6 +27,7 @@ public enum MainConfigKeys implements ConfigKey {
     IDLE_TIMEOUT("database.idle-timeout", Integer.class, 60_000),
     SSL_ENABLED("database.ssl-enabled", Boolean.class, false),
     SSL_MODE("database.ssl-mode", String.class, ""),
+    BASELINE_ON_MIGRATE("database.baseline-on-migrate", Boolean.class, false)
     ;
 
     private final String path;
