@@ -2,8 +2,6 @@ package fr.molzonas.ekeep.bootstrap;
 
 import fr.molzonas.ekeep.api.EkEepApi;
 import fr.molzonas.ekeep.api.EkEepApiImpl;
-import fr.molzonas.ekeep.api.enums.ReloadableType;
-import fr.molzonas.ekeep.api.lifecycle.Reloadable;
 import fr.molzonas.ekeep.config.Config;
 import fr.molzonas.ekeep.config.YamlConfig;
 import fr.molzonas.ekeep.config.keys.MainConfigKeys;
@@ -17,21 +15,19 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public final class EkEep extends JavaPlugin {
+    private final Executor databaseExecutor = Executors.newSingleThreadExecutor();
+
     public record BaseContext(EkEep plugin, EKLogger logger, Config config) {}
 
-    private final List<Reloadable> reloadableList = new LinkedList<>();
     private DatabaseManager databaseManager;
     private QuizMapper quizMapper;
     private EKLogger logger;
-    private Executor databaseExecutor = Executors.newSingleThreadExecutor();
 
     private BaseContext baseContext;
 
@@ -70,7 +66,7 @@ public final class EkEep extends JavaPlugin {
     }
 
     private void initConfig() {
-        this.ekConfig = reloadable(new YamlConfig(this.getConfig()));
+        this.ekConfig = new YamlConfig(this.getConfig());
         this.logger = new EKLogger(this, this.ekConfig);
         this.quizMapper = new QuizMapper(YamlConfiguration.loadConfiguration(Objects.requireNonNull(this.getTextResource("quiz.yml"))));
         this.baseContext = new BaseContext(this, this.logger, this.ekConfig);
@@ -106,22 +102,5 @@ public final class EkEep extends JavaPlugin {
 
     public Config getEKConfig() {
         return this.ekConfig;
-    }
-
-    private <T> T reloadable(T reloadable) {
-        if (reloadable instanceof Reloadable r) {
-            reloadableList.add(r);
-        }
-        return reloadable;
-    }
-
-    public void reloadAll() {
-        reloadableList.forEach(Reloadable::reload);
-    }
-
-    public void reloadOnly(ReloadableType type) {
-        reloadableList.stream()
-                .filter(x -> x.reloadableType().equals(type))
-                .forEach(Reloadable::reload);
     }
 }

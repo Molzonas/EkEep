@@ -5,7 +5,7 @@ import fr.molzonas.ekeep.database.DatabaseConfiguration;
 import org.jooq.SQLDialect;
 
 public interface DbProvider {
-    public record ProviderResult(boolean isOk, String message, Exception e) {}
+    record ProviderResult(boolean isOk, String message, Exception e) {}
 
     SQLDialect dialect();
     String jdbcUrl(DatabaseConfiguration databaseConfiguration);

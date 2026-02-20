@@ -3,15 +3,13 @@ package fr.molzonas.ekeep.config.mapper;
 import fr.molzonas.ekeep.api.domain.quiz.QAnswer;
 import fr.molzonas.ekeep.api.domain.quiz.QQuestion;
 import fr.molzonas.ekeep.api.domain.quiz.QQuiz;
-import fr.molzonas.ekeep.api.enums.ReloadableType;
-import fr.molzonas.ekeep.api.lifecycle.Reloadable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.*;
 
-public class QuizMapper implements Reloadable {
+public class QuizMapper {
     private final YamlConfiguration config;
     private QQuiz cache;
     private Map<String, UUID> cacheAliases = new HashMap<>();
@@ -75,15 +73,9 @@ public class QuizMapper implements Reloadable {
         return rs;
     }
 
-    @Override
     public void reload() {
         this.tried = false;
         this.cache = null;
         this.cacheAliases.clear();
-    }
-
-    @Override
-    public ReloadableType reloadableType() {
-        return ReloadableType.MAPPER;
     }
 }

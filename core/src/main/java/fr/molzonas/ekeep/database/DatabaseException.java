@@ -1,12 +1,7 @@
 package fr.molzonas.ekeep.database;
 
 public class DatabaseException extends RuntimeException {
-    private Step step;
-
-    public DatabaseException(Step initStep, String message) {
-        super(message);
-        this.step = initStep;
-    }
+    private final Step step;
 
     public DatabaseException(Step initStep, String message, Exception exception) {
         super(message, exception);

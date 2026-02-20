@@ -1,6 +1,5 @@
 package fr.molzonas.ekeep.config.keys;
 
-import java.util.Locale;
 import java.util.Optional;
 
 public enum MainConfigKeys implements ConfigKey {

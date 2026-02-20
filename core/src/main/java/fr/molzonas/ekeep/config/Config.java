@@ -1,14 +1,12 @@
 package fr.molzonas.ekeep.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.molzonas.ekeep.api.enums.ReloadableType;
-import fr.molzonas.ekeep.api.lifecycle.Reloadable;
 import fr.molzonas.ekeep.config.keys.ConfigKey;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class Config implements Reloadable {
+public abstract class Config {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private final ConcurrentHashMap<String, ConfigValue<?>> cache = new ConcurrentHashMap<>();
     @SuppressWarnings("unchecked")
@@ -53,13 +51,7 @@ public abstract class Config implements Reloadable {
     protected abstract <T> T getValue(ConfigKey key, Class<T> clazz);
     protected abstract boolean valueExists(ConfigKey key);
 
-    @Override
     public void reload() {
         this.cache.clear();
-    }
-
-    @Override
-    public ReloadableType reloadableType() {
-        return ReloadableType.CONFIG;
     }
 }
